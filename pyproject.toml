@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "romanq"
+version = "0.1.0"
+description = "Query the integer value of a Roman numeral, strictly."
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[project.scripts]
+romanq = "romanq.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["romanq*"]
