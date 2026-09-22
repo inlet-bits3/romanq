@@ -19,6 +19,12 @@ _VALUES = {
 
 _SUBTRACTIVE_PAIRS = ("CM", "CD", "XC", "XL", "IX", "IV")
 
+_DESCENDING = (
+    (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
+    (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
+    (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I"),
+)
+
 
 class RomanNumeralError(ValueError):
     """Raised when a string is not a well-formed Roman numeral."""
@@ -46,3 +52,26 @@ def value_of(text: str) -> int:
             total += _VALUES[text[i]]
             i += 1
     return total
+
+
+def to_roman(number: int) -> str:
+    """Return the strict Roman numeral for an integer in 1..3999.
+
+    Always produces the same canonical form value_of() accepts back, so
+    to_roman() and value_of() round-trip in both directions.
+    """
+    if isinstance(number, bool) or not isinstance(number, int):
+        raise RomanNumeralError(f"{number!r} is not an integer")
+    if not 1 <= number <= 3999:
+        raise RomanNumeralError(
+            f"{number} is out of range (1-3999, no Roman numeral for 0 "
+            "or anything above MMMCMXCIX)"
+        )
+
+    parts = []
+    remaining = number
+    for value, symbol in _DESCENDING:
+        count, remaining = divmod(remaining, value)
+        if count:
+            parts.append(symbol * count)
+    return "".join(parts)

@@ -1,7 +1,8 @@
 # romanq
 
 A command-line tool that answers exactly one question: what integer does
-this Roman numeral mean, and is it even a real one?
+this Roman numeral mean, and is it even a real one? It also goes the other
+way: given an integer, what's the one correct numeral for it?
 
 Most "Roman numeral converter" snippets you find online will happily accept
 `IIII` for 4 or `IC` for 99. Those aren't Roman numerals, they're strings
@@ -21,14 +22,25 @@ error: 'IIII' is not a well-formed Roman numeral
 
 $ romanq mmxxiv
 error: 'mmxxiv' is not a well-formed Roman numeral
+
+$ romanq 1994
+MCMXCIV
+
+$ romanq 4000
+error: 4000 is out of range (1-3999, no Roman numeral for 0 or anything above MMMCMXCIX)
 ```
+
+`romanq` picks the direction based on the shape of its argument: something
+that parses as an integer goes through `to_roman`, anything else is treated
+as a numeral and goes through `value_of`.
 
 As a library:
 
 ```python
-from romanq import value_of, RomanNumeralError
+from romanq import value_of, to_roman, RomanNumeralError
 
 value_of("MMXXIV")  # 2024
+to_roman(2024)       # "MMXXIV"
 
 try:
     value_of("IC")
